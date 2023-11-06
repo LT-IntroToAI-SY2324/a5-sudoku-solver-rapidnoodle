@@ -136,7 +136,7 @@ class Board:
         Returns:
             True if we've placed all numbers, False otherwise
         """
-        return self.num_nums_placed == self.size ^ 2
+        return self.num_nums_placed == self.size ** 2
 
     def update(self, row: int, column: int, assignment: int) -> None:
         """Assigns the given value to the cell given by passed in row and column
@@ -154,16 +154,13 @@ class Board:
         self.num_nums_placed += 1
 
         for c in self.rows[row]:
-            if type(c) is list and assignment in c:
-                c.remove(assignment)
+            remove_if_exists(c, assignment)
         
         for r in self.rows:
-            if type(r[column]) is list and assignment in r[column]:
-                r[column].remove(assignment)
+            remove_if_exists(r[column], assignment)
         
         for coord in self.subgrid_coordinates(row, column):
-            if self.rows[coord[0]][coord[1]] is list and assignment in self.rows[coord[0]][coord[1]]:
-                self.rows[coord[0]][coord[1]].remove(assignment)
+            remove_if_exists(self.rows[coord[0]][coord[1]], assignment)
 
 
 def DFS(state: Board) -> Board:
