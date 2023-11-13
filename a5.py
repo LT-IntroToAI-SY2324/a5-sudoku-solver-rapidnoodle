@@ -179,18 +179,14 @@ def DFS(state: Board) -> Board:
     while not lst.is_empty():
         curr = lst.pop()
         if curr.goal_test():
-            return curr # SOLVED
-        row, col = curr.find_most_constrained_cell()
-        # TEST START
-        if curr.rows[row][col] == 6:
-            curr.print_pretty()
-        # TEST END
-        for possible_value in curr.rows[row][col]:
-            new_curr = Board()
-            new_curr.rows = curr.rows
-            new_curr.update(row, col, possible_value)
-            lst.push(new_curr)
-    return None # FAILED
+            return curr
+        elif not curr.failure_test():
+            row, col = curr.find_most_constrained_cell()
+            for sel in curr.rows[row][col]:
+                cpy = copy.deepcopy(curr)
+                cpy.update(row, col, sel)
+                lst.push(cpy)
+    return None
 
 
 def BFS(state: Board) -> Board:
@@ -205,7 +201,18 @@ def BFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
-    pass
+    lst = Queue([state])
+    while not lst.is_empty():
+        curr = lst.pop()
+        if curr.goal_test():
+            return curr
+        elif not curr.failure_test():
+            row, col = curr.find_most_constrained_cell()
+            for sel in curr.rows[row][col]:
+                cpy = copy.deepcopy(curr)
+                cpy.update(row, col, sel)
+                lst.push(cpy)
+    return None
 
 
 if __name__ == "__main__":
